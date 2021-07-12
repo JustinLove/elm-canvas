@@ -1,4 +1,4 @@
-module Canvas.Internal.Canvas exposing (DrawOp(..), Drawable(..), PathSegment(..), Point, Setting(..), Shape(..), Text)
+module Canvas.Internal.Canvas exposing (DrawOp(..), Drawable(..), PathSegment(..), Point, Renderable(..), Setting(..), Shape(..), Text)
 
 import Canvas.Internal.CustomElementJsonApi as C exposing (Commands, commands)
 import Canvas.Texture as Texture exposing (Texture)
@@ -28,6 +28,14 @@ type Drawable
     | DrawableShapes (List Shape)
     | DrawableTexture Point Texture
     | DrawableClear Point Float Float
+    | DrawableGroup (List Renderable)
+
+type Renderable
+    = Renderable
+        { commands : Commands
+        , drawOp : DrawOp
+        , drawable : Drawable
+        }
 
 
 type alias Text =

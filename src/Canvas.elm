@@ -1,7 +1,7 @@
 module Canvas exposing
     ( toHtml, toHtmlWith
     , Renderable, Point
-    , clear, shapes, text, texture
+    , clear, shapes, text, texture, group
     , Shape
     , rect, circle, arc, path
     , PathSegment, arcTo, bezierCurveTo, lineTo, moveTo, quadraticCurveTo
@@ -172,12 +172,8 @@ We can make `Renderable`s to use with `Canvas.toHtml` with functions like
 `shapes` and `text`.
 
 -}
-type Renderable
-    = Renderable
-        { commands : Commands
-        , drawOp : DrawOp
-        , drawable : Drawable
-        }
+type alias Renderable
+    = C.Renderable
 
 
 mergeDrawOp : DrawOp -> DrawOp -> DrawOp
@@ -545,6 +541,15 @@ texture settings p t =
         )
 
 
+group : List Setting -> List Renderable -> Renderable
+group settings rs =
+    addSettingsToRenderable settings
+        (Renderable
+            { commands = []
+            , drawOp = NotSpecified
+            , drawable = DrawableGroup rs
+            }
+        )
 
 -- Rendering internals
 
@@ -578,6 +583,9 @@ renderDrawable drawable drawOp cmds =
 
         DrawableClear p w h ->
             renderClear p w h cmds
+
+        DrawableGroup r ->
+            List.append (render r) cmds
 
 
 renderShape : Shape -> Commands -> Commands

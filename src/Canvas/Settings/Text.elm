@@ -174,4 +174,7 @@ maxWidth width =
 
                 DrawableClear _ _ _ ->
                     d
+
+                DrawableGroup _ ->
+                    d
         )
